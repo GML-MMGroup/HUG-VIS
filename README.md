@@ -386,6 +386,6 @@ If you use HUG-VIS in your research, please cite:
 
 For questions about the dataset, please contact:
 
-- `TODO: name`
-- `TODO: email`
-- Project page: `https://github.com/GML-MMGroup/HUG-VIS`
+- **To:** [Zebang Cheng](mailto:zebang.cheng@gmail.com?cc=mafei%40gml.ac.cn) (`zebang.cheng@gmail.com`)
+- **Cc:** `mafei@gml.ac.cn`
+- **Project page:** <https://github.com/GML-MMGroup/HUG-VIS>
