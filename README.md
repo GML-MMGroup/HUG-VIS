@@ -1,391 +1,247 @@
+<div align="center">
+
 # HUG-VIS
 
-**HUG-VIS: A Controlled Multi-Modal Evaluation Benchmark for Affective Digital Humans**
+### A Multimodal Benchmark for Human-centered Understanding and Generation in Visual Intelligence
 
-![HUG-VIS overview](images/main_2.png)
+**Fei Ma · Zebang Cheng · Minghui Li · Hongbo Xu · Yuyong Tan · Yihua Shao · Hanling Wang · Zhou Liu · Yuqing Gao · Dong Wang · Long Ma · Laizhong Cui · Nicu Sebe · Qi Tian**
 
-HUG-VIS is a controlled multi-modal evaluation benchmark for affective digital humans. Instead of evaluating avatar systems as isolated talking-head generators, HUG-VIS treats them as coupled multimodal systems where identity, affect, language, motion, foreground quality, and audio-visual synchronization can be analyzed together.
+<sub>Guangdong Laboratory of Artificial Intelligence and Digital Economy (SZ) · Shenzhen University · Institute of Automation, Chinese Academy of Sciences · Pengcheng Laboratory · Tongji University · Tsinghua University · The Chinese University of Hong Kong · University of Trento · Huawei</sub>
 
-The dataset contains **8,400 green-screen seated half-body performances** from **30 actors**, crossing **7 emotions**, **4 action templates**, and **10 scripts**. Each sample provides synchronized audio, video, text, metadata, soft alpha mattes, and RGBA foregrounds, enabling paired and compositable evaluation units for controlled failure attribution.
+<br><br>
 
-Dataset and code will be released at:
+[![Project Page](https://img.shields.io/badge/Project-Page-345995?style=flat-square)](https://hug-vis.github.io/#top)
+![arXiv Coming Soon](https://img.shields.io/badge/arXiv-Coming_Soon-B31B1B?style=flat-square&logo=arxiv&logoColor=white)
+[![Hugging Face Dataset](https://img.shields.io/badge/Dataset-Hugging_Face-FFD21E?style=flat-square)](https://huggingface.co/datasets/GML-MMGroup/HUG-VIS)
+[![GitHub](https://img.shields.io/badge/GitHub-HUG--VIS-181717?style=flat-square&logo=github)](https://github.com/GML-MMGroup/HUG-VIS)
 
-```text
-https://github.com/GML-MMGroup/HUG-VIS
-```
+**TL;DR:** HUG-VIS evaluates multimodal emotion recognition, human video generation, voice cloning, and human video matting on the same condition-aligned grid of 8,400 controlled human performances.
 
-> This README is a release draft. Dataset download links, benchmark tables, and citation metadata will be updated before the public release.
+<img src="images/readme/hug-vis-overview.webp" width="100%" alt="Overview of the HUG-VIS dataset construction, four benchmark tasks, and cross-task analysis">
+
+</div>
 
 ## Overview
 
-Affective digital humans are becoming interfaces for communication and interaction, but their evaluation is often fragmented. Core modules are commonly benchmarked on disjoint datasets, making it difficult to determine why a generated avatar fails. The cause may be identity drift, weakened affect, script bias, foreground corruption, motion collapse, or audio-visual desynchronization.
+Human-centered visual intelligence is inherently multimodal: facial expression, body motion, vocal prosody, and linguistic content jointly convey what a person expresses and how that expression is performed. Existing emotion, generation, speech, and matting benchmarks are usually built from different subjects, acquisition conditions, and annotations, making it difficult to compare capabilities or analyze their relationships.
 
-HUG-VIS is designed to support controlled evaluation and failure attribution. It provides aligned audio-video-text samples under a green-screen capture setup, together with foreground alpha mattes and RGBA foreground videos. This allows researchers to vary or fix identity, affect, action, language, and foreground quality when testing affective avatar systems.
+HUG-VIS provides a shared, condition-aligned foundation for both understanding and generation. Thirty professional actors each complete the same 280 emotion-action-prompt assignments under a controlled Mandarin studio protocol. Every performance is packaged with synchronized RGB video, noise-suppressed audio, an assigned prompt, a verified transcript, and an alpha-matte sequence.
 
-## Planned Figures
+The benchmark covers four tasks under a common zero-shot protocol:
 
-The following figures will be added to the release page and paper repository:
+- **Multimodal Emotion Recognition** from image, video, audio, text, and multimodal inputs.
+- **Human Video Generation** under audio-driven and vision-driven settings.
+- **Voice Cloning** with speech quality, speaker preservation, and perceptual evaluation.
+- **Human Video Matting** with spatial and temporal alpha-matte evaluation.
 
-- **Main pipeline figure:** capture site, script and action design, recording protocol, data processing, and released data components.
-- **Foreground segmentation/matting figure:** green-screen input, soft alpha matte, RGBA foreground, and compositing examples.
-- **Dataset gallery:** representative frames across actors, emotions, actions, and scripts.
-- **Benchmark overview:** four evaluation tracks and metrics.
+## Dataset at a Glance
 
-Suggested paths:
+<div align="center">
 
-```text
-images/
-├── main_2.png
-├── matting_examples.png
-├── dataset_gallery.png
-└── benchmark_overview.png
+**30 actors × 7 emotions × 4 actions × 10 utterances = 8,400 clips**
+
+</div>
+
+| Property | Value |
+|---|---|
+| Actors | 30 professional actors; gender-balanced; mean age approximately 20 years |
+| Language | Mandarin Chinese |
+| Emotion conditions | Happy, Angry, Sad, Afraid, Disgusted, Surprised, and Neutral |
+| Action templates | 4 per emotion |
+| Scenario-based utterances | 10 per action; 40 per emotion; 280 per actor |
+| Performance clips | 8,400 total; 1,200 per emotion |
+| Framing | Controlled, seated half-body capture |
+| Video | 1920 × 1080; captured at 240 FPS and released at 30 FPS |
+| Audio | Synchronized with video and noise-suppressed |
+| Text | Assigned Mandarin prompt and verified transcript |
+| Foreground supervision | Alpha-matte sequence |
+
+Each actor performs an identical assignment inventory. This complete actor-by-assignment grid keeps the source material aligned across people and conditions, allowing downstream differences to be attributed more precisely to the actor, model, task, or evaluation criterion.
+
+## Data Collection and Quality Assurance
+
+<img src="images/readme/collection-setup.webp" width="100%" alt="HUG-VIS green-screen studio, capture equipment, instruction display, and prompt-guided recording setup">
+
+### Acquisition setup
+
+| Item | Specification |
+|---|---|
+| RGB camera | DJI Action 5 Pro with a fixed frontal mount |
+| Background | Uniform green screen for chroma-key matting |
+| Lighting | JHC-2000S LED with fixed color temperature and intensity |
+| Framing | Seated half-body with a constant subject-camera distance |
+| Microphone | DJI Mic Mini transmitter |
+| Recording protocol | Rest → prompted performance → return to rest |
+
+The actor begins at rest, delivers the assigned Mandarin prompt together with the corresponding emotion-consistent action, and returns to the resting pose. The shared temporal structure provides consistent boundaries for processing and evaluation while preserving natural variation across actors and performances.
+
+### Processing and quality control
+
+Alpha mattes are produced in Adobe Premiere Pro through chroma-key initialization followed by sequence-level refinement. Refinement focuses on hair, fingers, clothing, self-occlusion, and motion-blurred regions. RGB, audio, text, and alpha assets are then converted to consistent conventions.
+
+Eight professional volunteers review the retained clips for:
+
+- alignment among RGB video, audio, text, and alpha mattes;
+- audio-visual synchronization;
+- prompt and transcript accuracy; and
+- segmentation errors caused by motion blur or self-occlusion.
+
+Clips that fail these checks are discarded or returned for reprocessing.
+
+<img src="images/readme/controlled-sample-grid.webp" width="100%" alt="Examples from the HUG-VIS actor-by-assignment grid varying actor, emotion, and action while preserving the rest-performance-rest sequence">
+
+## Benchmark
+
+All tasks follow a common **zero-shot evaluation protocol**: no HUG-VIS benchmark sample is used for training, fine-tuning, calibration, or model selection. We report task-specific objective metrics and, for human video generation and voice cloning, complementary 1-5 mean opinion scores (MOS).
+
+### Multimodal Emotion Recognition
+
+We evaluate seven-class emotion recognition from image frames, video, audio, text, and their combinations. The table reports the best-performing model in each input setting.
+
+| Input | Best model | Accuracy (%) ↑ |
+|---|---|---:|
+| Image frame | MMA-DFER | 37.05 |
+| Video | MiniCPM-o 4.5 | 48.52 |
+| Audio | Audio-Reasoner-7B | 74.38 |
+| Text | DeepSeek-V3.2 | 82.93 |
+| Video + Audio | Qwen2.5-Omni-7B | 73.70 |
+| Video + Text | Qwen2.5-Omni-7B | 83.74 |
+| Video + Audio + Text | Qwen2.5-Omni-7B | **83.79** |
+
+Purely visual affect recognition remains the most difficult setting. The strongest image-frame and video systems reach 37.05% and 48.52%, compared with 74.38% for audio and 82.93% for text. For Qwen2.5-Omni-7B, adding text raises video-only accuracy from 27.77% to 83.74%, while adding audio to the video-text input increases it by only 0.05 percentage points. Current zero-shot systems therefore rely strongly on linguistic evidence and leave substantial room for better visual affect understanding and complementary multimodal fusion.
+
+### Human Video Generation
+
+HUG-VIS evaluates both **audio-driven** and **vision-driven** generation. Objective metrics and MOS are reported separately because the leading system depends on the evaluation criterion.
+
+#### Audio-driven generation
+
+| Evaluation | Criterion | Best model | Score |
+|---|---|---|---:|
+| Objective | CSIM ↑ | Ditto | **0.904** |
+| Objective | Sync-C ↑ | LatentSync | **5.43** |
+| Objective | Sync-D ↓ | Sonic / LatentSync | **7.73** |
+| MOS | ID Similarity ↑ | Sonic | **4.44** |
+| MOS | Emotion Naturalness ↑ | Sonic | **4.16** |
+| MOS | Lip Synchronization ↑ | LatentSync | **4.47** |
+
+The leaders separate across identity and synchronization. Ditto achieves the highest ArcFace identity similarity, while LatentSync leads Sync-C and shares the best Sync-D with Sonic. In the subjective study, Sonic receives the highest identity-similarity and emotion-naturalness scores, whereas LatentSync receives the highest lip-synchronization score.
+
+#### Vision-driven generation
+
+Vision-driven systems are compared **within their reported output scopes**: open-source Head Animation, open-source Body Animation, and closed-source systems. Scores should not be ranked directly across these groups.
+
+| Group | Objective metric leaders | MOS leaders |
+|---|---|---|
+| Open-source · Head Animation | **X-NeMo:** LPIPS 0.520 ↓, PSNR 10.15 ↑, FID 150.57 ↓; **AniPortrait:** CSIM 0.884 ↑, SSIM 0.383 ↑ | **PersonaLive!:** ID 4.41 ↑; **X-NeMo:** Emotion 3.68 ↑, Motion 3.82 ↑ |
+| Open-source · Body Animation | **Animate-X:** LPIPS 0.139 ↓, PSNR 18.81 ↑, SSIM 0.755 ↑; **Wan2.2:** CSIM 0.783 ↑, FID 20.24 ↓ | **Wan2.2:** ID 4.82 ↑, Emotion 4.61 ↑, Motion 4.72 ↑ |
+| Closed-source | **Vidu:** LPIPS 0.195 ↓, CSIM 0.786 ↑, FID 20.05 ↓; **Kling:** PSNR 16.41 ↑, SSIM 0.721 ↑ | **Kling:** ID 4.76 ↑, Motion 4.64 ↑; **Vidu:** Emotion 4.60 ↑ |
+
+No single system leads every criterion. For example, X-NeMo performs best on perceptual reconstruction, PSNR, and FID among open-source Head Animation methods, while AniPortrait leads identity similarity and SSIM. Within open-source Body Animation, Animate-X leads LPIPS, PSNR, and SSIM, whereas Wan2.2 leads CSIM and FID and receives the highest MOS on all three perceptual criteria.
+
+### Voice Cloning
+
+Voice cloning is evaluated with the reference-free quality predictors UTMOS and DNSMOS, Resemblyzer-based speaker similarity, and criterion-specific MOS. Real audio provides a speaker-similarity reference of 0.990; the reference-free quality predictors should not be interpreted as upper-bound fidelity scores.
+
+| Group | UTMOS ↑ | DNSMOS ↑ | Speaker Sim. ↑ | MOS ID ↑ | MOS Emotion ↑ |
+|---|---|---|---|---|---|
+| Open-source | OpenAudio S1 · **2.32** | OpenAudio S1 · **3.01** | CosyVoice 3 · **0.856** | IndexTTS2 · **4.24** | IndexTTS2 · **4.40** |
+| Closed-source | Inworld TTS-1.5 · **2.69** | Inworld TTS-1.5 · **3.22** | Eleven Multilingual v2 · **0.779** | Eleven Multilingual v2 · **3.73** | Eleven Multilingual v2 · **4.23** |
+
+The rankings vary by evaluation axis. OpenAudio S1 and Inworld TTS-1.5 lead their respective groups on the reference-free quality predictors, while CosyVoice 3 and Eleven Multilingual v2 lead speaker similarity. In the subjective study, IndexTTS2 leads both open-source MOS criteria, and Eleven Multilingual v2 leads both closed-source MOS criteria.
+
+### Human Video Matting
+
+We evaluate nine matting systems using four spatial errors - MAD, MSE, gradient, and connectivity - together with the temporal dtSSD error. Lower is better for every metric.
+
+| Model | MAD ↓ | MSE ↓ | dtSSD ↓ | Grad ↓ | Conn ↓ |
+|---|---:|---:|---:|---:|---:|
+| **BiRefNet** | **2.30** | **0.82** | **2.04** | **10.43** | **4.31** |
+| MatAnyone 2 | 3.86 | 0.91 | 2.12 | 11.45 | 4.53 |
+
+BiRefNet ranks first on all five criteria, while MatAnyone 2 ranks second throughout. The remaining errors concentrate around fine hand boundaries, rapidly changing motion contours, and foreground leakage, making boundary fidelity under motion the principal challenge for human video matting on HUG-VIS.
+
+<img src="images/readme/matting-comparison.webp" width="100%" alt="Qualitative comparison of reference alpha mattes and nine human video matting systems across a moving sequence">
+
+### Cross-task Insights
+
+To compare heterogeneous tasks, HUG-VIS converts selected measurements into higher-is-harder difficulty profiles and normalizes each independently across the seven emotions. These profiles represent relative difficulty within each metric, not directly comparable raw scores across tasks.
+
+| Capability metric | Hardest emotion |
+|---|---|
+| MER-RE · recognition error | Afraid |
+| AD-CSIM · audio-driven identity | Sad |
+| AD-Sync-C · audio-driven synchronization | Sad |
+| VD-CSIM · vision-driven identity | Disgusted |
+| VD-LPIPS · vision-driven reconstruction | Sad |
+| VC-UTMOS · voice quality | Angry |
+| VC-DNSMOS · voice quality | Angry |
+| VM-MAD · matting error | Happy |
+
+<img src="images/readme/cross-task-difficulty.webp" width="100%" alt="Normalized emotion difficulty profiles across recognition, generation, voice cloning, and matting metrics">
+
+The shared actor-source-condition design also reveals several cross-task relationships:
+
+| Analysis | Result | Interpretation |
+|---|---:|---|
+| VC-UTMOS vs. VC-DNSMOS emotion-difficulty profiles | ρ = **0.82** | The two reference-free voice-quality predictors produce strongly aligned emotion rankings. |
+| MER-RE vs. VM-MAD emotion-difficulty profiles | ρ = **-0.86** | Recognition and matting exhibit opposing emotion-difficulty rankings. |
+| Audio-driven vs. vision-driven source-level difficulty | ρ = **0.99** | The two generation regimes assign nearly identical relative difficulty to matched source clips. |
+| Reference-alpha motion difficulty vs. dtSSD | ρ = **0.63** | Larger foreground changes are associated with higher temporal matting error. |
+
+Neutral samples cluster at low motion difficulty and low temporal error, while Happy, Angry, and Disgusted involve larger alpha and foreground-centroid changes together with higher dtSSD. Overall, difficulty depends jointly on the instructed emotion, the evaluated capability, and the chosen criterion.
+
+## Dataset Access
+
+> **Controlled access.** HUG-VIS contains identifiable recordings of human participants and is available only to approved applicants for non-commercial academic research under the [HUG-VIS Dataset Academic Use License](HUG-VIS_Dataset_Academic_Use_License.docx). Once the gated release opens, access requests will be reviewed manually and, if approved, granted to an individual Hugging Face account. Completing the steps below does not guarantee approval.
+
+### Request access
+
+1. **Read the license.** Confirm that the proposed work and your institution satisfy the non-commercial academic-use terms.
+2. **Submit the Hugging Face request.** Sign in to your individual Hugging Face user account, open the [HUG-VIS Dataset page](https://huggingface.co/datasets/GML-MMGroup/HUG-VIS), and complete every field in the access form. Provide the exact Hugging Face username that should receive access.
+3. **Complete and sign the agreement.** Download the [Academic Use License](HUG-VIS_Dataset_Academic_Use_License.docx), enter the same name, institution, position/title, and official institutional email used in the Hugging Face form, and sign it. The responsible applicant/signatory and the Hugging Face requester must be the same eligible individual. That person must be a faculty member, researcher, or research staff member employed by a university or public/non-profit research institution. Students may not sign as the responsible applicant.
+4. **Email the signed agreement.** Send it from the official institutional email entered in both forms to **Zebang Cheng** (`zebang.cheng@gmail.com`) and cc **Fei Ma** (`mafei@gml.ac.cn`). Use the subject `[HUG-VIS Access] Full Name | Institution | HF username`. [Email the signed agreement](mailto:zebang.cheng@gmail.com?cc=mafei@gml.ac.cn&subject=%5BHUG-VIS%20Access%5D%20Full%20Name%20%7C%20Institution%20%7C%20HF%20username).
+5. **Wait for review.** The team matches the Hugging Face request to the signed agreement and institutional-email submission. If approved, access is granted only to the Hugging Face username named in the application. Do not share passwords, tokens, or access credentials.
+
+> If the Dataset page does not display an access-request form, the gated release is not yet open. Please do not email incomplete materials.
+
+### Download after approval
+
+Authenticate with the same individual Hugging Face account that was approved:
+
+```bash
+hf auth login
+hf download GML-MMGroup/HUG-VIS \
+  --repo-type dataset \
+  --local-dir HUG-VIS
 ```
 
-## Dataset Statistics
-
-| Item | Value |
-| --- | ---: |
-| Actors | 30 |
-| Emotions | 7 |
-| Action templates | 4 |
-| Scripts per emotion-action condition | 10 |
-| Total clips | 8,400 |
-| Capture setup | Seated half-body performance with desk and green screen |
-| Released modalities | Audio, video, text, metadata, alpha mattes, RGBA foregrounds |
-
-Total number of clips:
-
-```text
-30 actors x 7 emotions x 4 action templates x 10 scripts = 8,400 clips
-```
-
-## Data Design
-
-Each actor performs the same script and action design under seven affective states:
-
-- happy
-- surprised
-- angry
-- sad
-- fearful
-- disgusted
-- neutral
-
-For each emotion, we define four coarse action templates. Each action template contains ten scripted utterances, producing 40 utterances per emotion for each actor.
-
-Every utterance starts from a canonical initial state where the actor places both hands on the table. The actor then speaks the script while performing the corresponding emotional action, and finally returns to the initial state. Actors follow the same action reference, but natural variations are preserved across scripts and performers.
-
-All actors share the same script set. Reading errors are corrected using automatic speech recognition followed by manual checking.
-
-## Released Data
-
-HUG-VIS will release the following components:
-
-| Component | Description |
-| --- | --- |
-| Audio | Speech waveform for each utterance |
-| Processed video | Synchronized processed video clips |
-| Text | Corrected transcripts and script metadata |
-| Metadata | Actor ID, emotion, action template, script ID, duration, frame rate, and paths |
-| Soft alpha mattes | Per-frame foreground alpha labels |
-| RGBA foregrounds | Foreground human videos with alpha channel |
-| Split files | Recommended train/validation/test splits |
-| Benchmark results | Evaluation results for the four tracks |
-| Evaluation code | Scripts for metrics and benchmark reproduction |
-
-## Recommended Directory Structure
-
-```text
-HUG-VIS/
-├── metadata/
-│   ├── actors.csv
-│   ├── clips.csv
-│   ├── splits/
-│   │   ├── train.txt
-│   │   ├── val.txt
-│   │   └── test.txt
-│   ├── emotions.json
-│   ├── actions.json
-│   └── scripts.json
-├── audio/
-│   └── actor_0001/
-│       └── happy/
-│           └── action_01/
-│               └── script_001.wav
-├── video_processed/
-│   └── actor_0001/
-│       └── happy/
-│           └── action_01/
-│               └── script_001.mp4
-├── alpha_matte/
-│   └── actor_0001/
-│       └── happy/
-│           └── action_01/
-│               └── script_001/
-│                   ├── 000000.png
-│                   ├── 000001.png
-│                   └── ...
-├── rgba_foreground/
-│   └── actor_0001/
-│       └── happy/
-│           └── action_01/
-│               └── script_001.mov
-└── transcripts/
-    └── actor_0001/
-        └── happy/
-            └── action_01/
-                └── script_001.txt
-```
-
-Suggested clip ID:
-
-```text
-actor_{actor_id}_{emotion}_action_{action_id}_script_{script_id}
-```
-
-Example:
-
-```text
-actor_0001_happy_action_01_script_001
-```
-
-## Metadata Format
-
-### `clips.csv`
-
-Recommended fields:
-
-| Field | Description |
-| --- | --- |
-| `clip_id` | Unique clip identifier |
-| `actor_id` | Actor identifier |
-| `emotion` | Emotion label |
-| `action_id` | Action template ID |
-| `script_id` | Script ID |
-| `transcript` | Corrected transcript |
-| `asr_transcript` | Raw ASR transcript, if released |
-| `audio_path` | Relative path to audio |
-| `video_path` | Relative path to processed video |
-| `alpha_matte_path` | Relative path to alpha matte frames |
-| `rgba_foreground_path` | Relative path to RGBA foreground video |
-| `duration` | Duration in seconds |
-| `fps` | Video frame rate |
-| `sample_rate` | Audio sample rate |
-| `resolution` | Video resolution |
-
-### `actions.json`
-
-Each emotion contains four action templates. Each template is performed with ten scripts.
-
-```json
-{
-  "happy": [
-    {
-      "action_id": 1,
-      "script_ids": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-      "description": "TODO: describe the action reference"
-    }
-  ]
-}
-```
-
-## Download
-
-| Part | Content | Link |
-| --- | --- | --- |
-| Academic-use license | Application form for non-commercial academic research access | [Download the license form](HUG-VIS_Dataset_Academic_Use_License.docx) |
-| Audio | Speech clips | `TODO` |
-| Processed videos | Synchronized processed videos | `TODO` |
-| Text and metadata | Transcripts, labels, and split files | `TODO` |
-| Soft alpha mattes | Per-frame alpha labels | `TODO` |
-| RGBA foregrounds | Compositable foreground videos | `TODO` |
-| Evaluation code | Benchmark scripts and metrics | `TODO` |
-| Benchmark results | Tables for all four tracks | `TODO` |
-
-## Benchmark Tracks
-
-HUG-VIS instantiates four benchmark tracks and evaluates more than 60 system configurations.
-
-### Track 1: Voice Cloning
-
-This track evaluates whether a model can synthesize high-quality speech while preserving speaker identity and affective expression.
-
-Metrics:
-
-| Metric | Direction | Description |
-| --- | --- | --- |
-| UTMOS | Higher is better | Automatic speech quality estimation |
-| DNSMOS | Higher is better | Non-intrusive speech quality estimation |
-
-Results:
-
-| Model | UTMOS | DNSMOS |
-| --- | ---: | ---: |
-| Model-1 | `TODO` | `TODO` |
-| Model-2 | `TODO` | `TODO` |
-| Model-3 | `TODO` | `TODO` |
-| Model-4 | `TODO` | `TODO` |
-| Model-5 | `TODO` | `TODO` |
-| Model-6 | `TODO` | `TODO` |
-
-Observed issue to highlight in the paper: speech-quality predictors may favor synthetic voices while missing identity drift.
-
-### Track 2: Foreground Matting
-
-This track evaluates green-screen foreground extraction. We evaluate both segmentation models and matting models, and release soft alpha mattes and RGBA foregrounds for compositing.
-
-Model groups:
-
-- 3 segmentation models
-- 6 matting models
-
-Metrics:
-
-| Metric | Direction | Description |
-| --- | --- | --- |
-| MAD | Lower is better | Mean absolute difference |
-| MSE | Lower is better | Mean squared error |
-| dtSSD_mean | Lower is better | Temporal stability error |
-| Grad_mean | Lower is better | Gradient error |
-| Conn_mean | Lower is better | Connectivity error |
-
-Segmentation models:
-
-| Model | MAD | MSE | dtSSD_mean | Grad_mean | Conn_mean |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| Segmentation-1 | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` |
-| Segmentation-2 | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` |
-| Segmentation-3 | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` |
-
-Matting models:
-
-| Model | MAD | MSE | dtSSD_mean | Grad_mean | Conn_mean |
-| --- | ---: | ---: | ---: | ---: | ---: |
-| Matting-1 | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` |
-| Matting-2 | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` |
-| Matting-3 | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` |
-| Matting-4 | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` |
-| Matting-5 | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` |
-| Matting-6 | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` |
-
-### Track 3: Multimodal Affect Recognition
-
-This track evaluates emotion classification using single-modal and multimodal inputs.
-
-Modalities:
-
-- image frame
-- audio
-- video
-- text
-- video + audio
-- video + text
-- video + audio + text
-
-Results:
-
-| Modality | Accuracy |
-| --- | ---: |
-| Image frame | `TODO` |
-| Audio | `TODO` |
-| Video | `TODO` |
-| Text | `TODO` |
-| Video + audio | `TODO` |
-| Video + text | `TODO` |
-| Video + audio + text | `TODO` |
-
-Observed issue to highlight in the paper: text can nearly match trimodal affect recognition, revealing lexical shortcuts and script bias.
-
-### Track 4: Controllable Avatar Synthesis
-
-This track evaluates digital human synthesis under different control signals.
-
-Settings:
-
-- head image + speech driving
-- head image + extracted video pose driving
-- head image + text driving
-- half-body image + video pose driving
-
-Metrics:
-
-| Metric | Direction | Description |
-| --- | --- | --- |
-| PSNR | Higher is better | Pixel-level reconstruction quality |
-| SSIM | Higher is better | Structural similarity |
-| LPIPS | Lower is better | Perceptual distance |
-| FID | Lower is better | Image distribution distance |
-| FVD | Lower is better | Video distribution distance |
-| SyncNet-Sync-C | Higher is better | Audio-visual synchronization confidence |
-| SyncNet-Sync-D | Lower is better | Audio-visual synchronization distance |
-
-Results:
-
-| Setting | PSNR | SSIM | LPIPS | FID | FVD | SyncNet-Sync-C | SyncNet-Sync-D |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Head image + speech | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` |
-| Head image + video pose | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` |
-| Head image + text | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` |
-| Half-body image + video pose | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` | `TODO` |
-
-Observed issue to highlight in the paper: synthesis leaders can split across fidelity, synchronization, identity, and coverage, so a single leaderboard score may hide failure modes.
-
-## Evaluation Protocol
-
-When reporting results on HUG-VIS, please include:
-
-- train/validation/test split
-- whether actors overlap between training and testing
-- input modality or driving condition
-- preprocessing details for audio, video, text, alpha mattes, and RGBA foregrounds
-- model name, checkpoint source, and training data
-- metric implementations and evaluation settings
-- whether corrected transcripts or raw ASR transcripts are used
-
-We recommend actor-independent evaluation for identity generalization and controlled comparisons that fix or vary only one factor at a time.
-
-## Intended Use
-
-HUG-VIS is intended for research on:
-
-- affective digital humans
-- controllable avatar synthesis
-- speech-driven and text-driven human animation
-- multimodal affect recognition
-- green-screen segmentation and video matting
-- controlled evaluation and failure attribution
-
-## License and Ethics
-
-Access to HUG-VIS is governed by the [HUG-VIS Dataset Academic Use License](HUG-VIS_Dataset_Academic_Use_License.docx). The dataset is available only for approved, non-commercial academic research. Applicants must download and complete the form, obtain the responsible applicant's signature, scan it, and submit it from the official institutional email address listed in the application. The submission address and official paper citation will be published before dataset access opens.
-
-The agreement prohibits commercial use, redistribution, re-identification, impersonation, harmful or unlawful use, and public release of identifiable samples without prior written permission. It also requires secure storage and deletion when the research ends or access is withdrawn.
-
-Because HUG-VIS contains recordings of human actors and can support realistic speech or video generation, users must follow responsible AI practices:
-
-- use the dataset only for permitted research purposes
-- do not attempt to identify, contact, or impersonate actors
-- do not generate misleading, harmful, defamatory, or unauthorized synthetic media
-- clearly disclose generated content when required
-- do not redistribute the dataset outside the license terms
+## Responsible Use and License
+
+The following summary does not replace the complete [HUG-VIS Dataset Academic Use License](HUG-VIS_Dataset_Academic_Use_License.docx).
+
+- Use the Dataset and derived models or materials only for scientific, educational, and non-commercial academic purposes.
+- Do not sell, transfer, sublicense, publish, upload, or otherwise redistribute the Dataset, annotations, restricted derivatives, or access credentials.
+- Do not edit, manipulate, composite, dub, replace, or republish the original video or audio as modified source data. Technical processing required for research is permitted only within the approved research environment; processed copies and new annotations remain restricted.
+- Research-group members may work with the Dataset only under the responsible applicant's direct supervision, in the approved research environment, and under the same terms. Never share Hugging Face credentials.
+- Do not identify, re-identify, contact, track, impersonate, or harm recorded participants.
+- Do not use HUG-VIS for surveillance, deceptive deepfakes, defamation, discrimination, sexual content, or unlawful purposes.
+- Do not publicly release raw or identifiable samples, screenshots, audio clips, or outputs reproducing a participant's recognizable face or voice without prior written permission from the Data Provider.
+- Store the Dataset securely, promptly report loss, leakage, or unauthorized access, and delete all copies when the research ends, access is withdrawn, or deletion is requested.
+
+All actors provided written informed consent before recording for research capture and authorized use of their identifiable likeness, voice, and performed behavior. Public examples released by the project are limited to uses covered by those authorizations; this does not grant dataset recipients permission to republish identifiable material.
 
 ## Citation
 
-If you use HUG-VIS in your research, please cite:
+The official BibTeX entry and arXiv link will be added when the paper record becomes available.
 
-```bibtex
-@misc{hugvis2026,
-  title        = {HUG-VIS: A Controlled Multi-Modal Evaluation Benchmark for Affective Digital Humans},
-  author       = {TODO},
-  year         = {2026},
-  howpublished = {\url{https://github.com/GML-MMGroup/HUG-VIS}},
-}
-```
+If you use HUG-VIS, please cite the official paper once the citation is released.
 
 ## Contact
 
-For questions about the dataset, please contact:
+For dataset access and project questions:
 
-- **To:** [Zebang Cheng](mailto:zebang.cheng@gmail.com?cc=mafei%40gml.ac.cn) (`zebang.cheng@gmail.com`)
-- **Cc:** `mafei@gml.ac.cn`
-- **Project page:** <https://hug-vis.github.io>
+- **To:** [Zebang Cheng](mailto:zebang.cheng@gmail.com?cc=mafei%40gml.ac.cn) - `zebang.cheng@gmail.com`
+- **Cc:** [Fei Ma](mailto:mafei@gml.ac.cn) - `mafei@gml.ac.cn`
+- **Project page:** [https://hug-vis.github.io/#top](https://hug-vis.github.io/#top)
+- **Dataset:** [https://huggingface.co/datasets/GML-MMGroup/HUG-VIS](https://huggingface.co/datasets/GML-MMGroup/HUG-VIS)
