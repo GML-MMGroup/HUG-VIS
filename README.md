@@ -14,7 +14,7 @@ Dataset and code will be released at:
 https://github.com/GML-MMGroup/HUG-VIS
 ```
 
-> This README is a release draft. Figures, download links, benchmark tables, licenses, and citation metadata will be updated before the public release.
+> This README is a release draft. Dataset download links, benchmark tables, and citation metadata will be updated before the public release.
 
 ## Overview
 
@@ -193,6 +193,7 @@ Each emotion contains four action templates. Each template is performed with ten
 
 | Part | Content | Link |
 | --- | --- | --- |
+| Academic-use license | Application form for non-commercial academic research access | [Download the license form](HUG-VIS_Dataset_Academic_Use_License.docx) |
 | Audio | Speech clips | `TODO` |
 | Processed videos | Synchronized processed videos | `TODO` |
 | Text and metadata | Transcripts, labels, and split files | `TODO` |
@@ -356,7 +357,9 @@ HUG-VIS is intended for research on:
 
 ## License and Ethics
 
-The dataset will be released under `TODO: specify license`, subject to the data usage agreement.
+Access to HUG-VIS is governed by the [HUG-VIS Dataset Academic Use License](HUG-VIS_Dataset_Academic_Use_License.docx). The dataset is available only for approved, non-commercial academic research. Applicants must download and complete the form, obtain the responsible applicant's signature, scan it, and submit it from the official institutional email address listed in the application. The submission address and official paper citation will be published before dataset access opens.
+
+The agreement prohibits commercial use, redistribution, re-identification, impersonation, harmful or unlawful use, and public release of identifiable samples without prior written permission. It also requires secure storage and deletion when the research ends or access is withdrawn.
 
 Because HUG-VIS contains recordings of human actors and can support realistic speech or video generation, users must follow responsible AI practices:
 
