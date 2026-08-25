@@ -167,6 +167,8 @@ BiRefNet ranks first on all five criteria, while MatAnyone 2 ranks second throug
 
 To compare heterogeneous tasks, HUG-VIS converts selected measurements into higher-is-harder difficulty profiles and normalizes each independently across the seven emotions. These profiles represent relative difficulty within each metric, not directly comparable raw scores across tasks.
 
+#### Emotion difficulty across metrics
+
 | Capability metric | Hardest emotion |
 |---|---|
 | MER-RE · recognition error | Afraid |
@@ -180,16 +182,36 @@ To compare heterogeneous tasks, HUG-VIS converts selected measurements into high
 
 <img src="images/readme/cross-task-difficulty.webp" width="100%" alt="Normalized emotion difficulty profiles across recognition, generation, voice cloning, and matting metrics">
 
-The shared actor-source-condition design also reveals several cross-task relationships:
+<p align="center"><em>Emotion difficulty across eight task-specific metrics. Each profile is independently normalized, and outlined cells mark the hardest emotion under each criterion.</em></p>
 
-| Analysis | Result | Interpretation |
-|---|---:|---|
-| VC-UTMOS vs. VC-DNSMOS emotion-difficulty profiles | ρ = **0.82** | The two reference-free voice-quality predictors produce strongly aligned emotion rankings. |
-| MER-RE vs. VM-MAD emotion-difficulty profiles | ρ = **-0.86** | Recognition and matting exhibit opposing emotion-difficulty rankings. |
-| Audio-driven vs. vision-driven source-level difficulty | ρ = **0.99** | The two generation regimes assign nearly identical relative difficulty to matched source clips. |
-| Reference-alpha motion difficulty vs. dtSSD | ρ = **0.63** | Larger foreground changes are associated with higher temporal matting error. |
+The hardest condition changes with the evaluated capability and criterion. Afraid is hardest for recognition error, Sad for audio-driven identity and synchronization as well as vision-driven reconstruction, Disgusted for vision-driven identity, Angry for both voice-quality predictors, and Happy for matting error.
 
-Neutral samples cluster at low motion difficulty and low temporal error, while Happy, Angry, and Disgusted involve larger alpha and foreground-centroid changes together with higher dtSSD. Overall, difficulty depends jointly on the instructed emotion, the evaluated capability, and the chosen criterion.
+#### Agreement between metric profiles
+
+<p align="center">
+  <img src="images/readme/metric-profile-agreement.webp" width="78%" alt="Pairwise Spearman correlations between emotion-difficulty profiles from eight HUG-VIS benchmark metrics"><br>
+  <em>Pairwise Spearman rank correlations between the seven-emotion difficulty profiles.</em>
+</p>
+
+Agreement is selective rather than universal. The two reference-free voice-quality profiles are strongly aligned (**ρ = 0.82**), while recognition error and matting error exhibit opposing emotion rankings (**ρ = -0.86**). Most remaining pairs show weak or mixed agreement, so an emotion cannot be described as globally easy or difficult without specifying the task and metric.
+
+#### Source-level difficulty across generation regimes
+
+<p align="center">
+  <img src="images/readme/source-level-difficulty.webp" width="76%" alt="Hexbin comparison of audio-driven and vision-driven source-level difficulty on matched HUG-VIS clips"><br>
+  <em>Audio-driven and vision-driven source-level difficulty on the common-valid clip intersection; color denotes sample density, the dashed line denotes equality, and the red line is the OLS fit.</em>
+</p>
+
+Audio-driven and vision-driven generation assign nearly identical relative difficulty to matched source clips (**ρ = 0.99**). Although the two regimes use different driving signals, both remain highly sensitive to the visual content and reconstruction demands of the underlying source performance.
+
+#### Motion difficulty and temporal matting error
+
+<p align="center">
+  <img src="images/readme/motion-difficulty-matting.webp" width="76%" alt="Relationship between reference-alpha motion difficulty and temporal dtSSD matting error across HUG-VIS emotions"><br>
+  <em>Relationship between reference-alpha motion difficulty and dtSSD temporal matting error; the line denotes the OLS fit.</em>
+</p>
+
+Motion difficulty, computed from frame-to-frame alpha variation and normalized foreground displacement, is positively associated with dtSSD error (**ρ = 0.63**). Neutral samples cluster at low motion difficulty and low temporal error, while Happy, Angry, and Disgusted involve larger foreground changes and higher dtSSD. Together, the four analyses show that difficulty depends jointly on the instructed emotion, the evaluated capability, and the chosen criterion.
 
 ## Dataset Access
 
@@ -202,8 +224,6 @@ Neutral samples cluster at low motion difficulty and low temporal error, while H
 3. **Complete and sign the agreement.** Download the [Academic Use License](HUG-VIS_Dataset_Academic_Use_License.docx), enter the same name, institution, position/title, and official institutional email used in the Hugging Face form, and sign it. The responsible applicant/signatory and the Hugging Face requester must be the same eligible individual. That person must be a faculty member, researcher, or research staff member employed by a university or public/non-profit research institution. Students may not sign as the responsible applicant.
 4. **Email the signed agreement.** Send it from the official institutional email entered in both forms to **Zebang Cheng** (`zebang.cheng@gmail.com`) and cc **Fei Ma** (`mafei@gml.ac.cn`). Use the subject `[HUG-VIS Access] Full Name | Institution | HF username`. [Email the signed agreement](mailto:zebang.cheng@gmail.com?cc=mafei@gml.ac.cn&subject=%5BHUG-VIS%20Access%5D%20Full%20Name%20%7C%20Institution%20%7C%20HF%20username).
 5. **Wait for review.** The team matches the Hugging Face request to the signed agreement and institutional-email submission. If approved, access is granted only to the Hugging Face username named in the application. Do not share passwords, tokens, or access credentials.
-
-> If the Dataset page does not display an access-request form, the gated release is not yet open. Please do not email incomplete materials.
 
 ### Download after approval
 
