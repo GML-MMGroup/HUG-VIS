@@ -180,7 +180,9 @@ To compare heterogeneous tasks, HUG-VIS converts selected measurements into high
 | VC-DNSMOS · voice quality | Angry |
 | VM-MAD · matting error | Happy |
 
-<img src="images/readme/cross-task-difficulty.webp" width="100%" alt="Normalized emotion difficulty profiles across recognition, generation, voice cloning, and matting metrics">
+<p align="center">
+  <img src="images/readme/cross-task-difficulty.webp" width="70%" alt="Normalized emotion difficulty profiles across recognition, generation, voice cloning, and matting metrics">
+</p>
 
 <p align="center"><em>Emotion difficulty across eight task-specific metrics. Each profile is independently normalized, and outlined cells mark the hardest emotion under each criterion.</em></p>
 
@@ -189,7 +191,7 @@ The hardest condition changes with the evaluated capability and criterion. Afrai
 #### Agreement between metric profiles
 
 <p align="center">
-  <img src="images/readme/metric-profile-agreement.webp" width="78%" alt="Pairwise Spearman correlations between emotion-difficulty profiles from eight HUG-VIS benchmark metrics"><br>
+  <img src="images/readme/metric-profile-agreement.webp" width="55%" alt="Pairwise Spearman correlations between emotion-difficulty profiles from eight HUG-VIS benchmark metrics"><br>
   <em>Pairwise Spearman rank correlations between the seven-emotion difficulty profiles.</em>
 </p>
 
@@ -198,7 +200,7 @@ Agreement is selective rather than universal. The two reference-free voice-quali
 #### Source-level difficulty across generation regimes
 
 <p align="center">
-  <img src="images/readme/source-level-difficulty.webp" width="76%" alt="Hexbin comparison of audio-driven and vision-driven source-level difficulty on matched HUG-VIS clips"><br>
+  <img src="images/readme/source-level-difficulty.webp" width="53%" alt="Hexbin comparison of audio-driven and vision-driven source-level difficulty on matched HUG-VIS clips"><br>
   <em>Audio-driven and vision-driven source-level difficulty on the common-valid clip intersection; color denotes sample density, the dashed line denotes equality, and the red line is the OLS fit.</em>
 </p>
 
@@ -207,7 +209,7 @@ Audio-driven and vision-driven generation assign nearly identical relative diffi
 #### Motion difficulty and temporal matting error
 
 <p align="center">
-  <img src="images/readme/motion-difficulty-matting.webp" width="76%" alt="Relationship between reference-alpha motion difficulty and temporal dtSSD matting error across HUG-VIS emotions"><br>
+  <img src="images/readme/motion-difficulty-matting.webp" width="53%" alt="Relationship between reference-alpha motion difficulty and temporal dtSSD matting error across HUG-VIS emotions"><br>
   <em>Relationship between reference-alpha motion difficulty and dtSSD temporal matting error; the line denotes the OLS fit.</em>
 </p>
 
